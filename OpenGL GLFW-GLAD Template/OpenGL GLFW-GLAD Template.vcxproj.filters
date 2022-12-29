@@ -1,0 +1,168 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;c++;cppm;ixx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;h++;hm;inl;inc;ipp;xsd</Extensions>
+    </Filter>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="Source Files\Windows">
+      <UniqueIdentifier>{ed87dc29-581b-404c-83c4-bdcdc8ee080b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Events">
+      <UniqueIdentifier>{839e049f-6481-4e4e-bca7-8f9a9b2f008f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Windows">
+      <UniqueIdentifier>{a9248d2a-cee6-4f4e-86c0-8ec117af7ab6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Events">
+      <UniqueIdentifier>{cec11631-167f-4095-b585-65d72b833c4e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Essentials">
+      <UniqueIdentifier>{3a29806d-64fa-46dd-be94-9ff85324af27}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Essentials">
+      <UniqueIdentifier>{ce2a4ea3-8c37-49bc-9eba-e2b329dbdebb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Header">
+      <UniqueIdentifier>{90a03a87-5ebd-46f4-87b8-1f030c5f128b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Essentials\Inputs">
+      <UniqueIdentifier>{8d424b86-36d6-4af0-80bb-9c1d086047d6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Essentials\Visual">
+      <UniqueIdentifier>{84534508-794e-4770-8f2c-c1024872b3b5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Essentials\Additional">
+      <UniqueIdentifier>{ecedbfcb-c4c0-47b7-b3d8-c116e675307a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Essentials\Inputs">
+      <UniqueIdentifier>{fc0eaade-6758-406a-afaa-27a9a6293131}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Essentials\Additional">
+      <UniqueIdentifier>{7f82f28e-6774-452d-938c-b768ce047f37}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Essentials\Visual">
+      <UniqueIdentifier>{e2c31092-8274-49b2-897b-8b8f861d3f3b}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="Main.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="glad.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Windows\Window2D.cpp">
+      <Filter>Source Files\Windows</Filter>
+    </ClCompile>
+    <ClCompile Include="Windows\Window3D.cpp">
+      <Filter>Source Files\Windows</Filter>
+    </ClCompile>
+    <ClCompile Include="Events\EventHandler.cpp">
+      <Filter>Source Files\Events</Filter>
+    </ClCompile>
+    <ClCompile Include="Events\Events.cpp">
+      <Filter>Source Files\Events</Filter>
+    </ClCompile>
+    <ClCompile Include="Essentials\Vertex\Vertex2D.cpp">
+      <Filter>Source Files\Essentials</Filter>
+    </ClCompile>
+    <ClCompile Include="Essentials\VertexArray\VertexArray2D.cpp">
+      <Filter>Source Files\Essentials</Filter>
+    </ClCompile>
+    <ClCompile Include="Essentials\Joystick\Joystick.cpp">
+      <Filter>Source Files\Essentials\Inputs</Filter>
+    </ClCompile>
+    <ClCompile Include="Essentials\Keyboard\Keyboard.cpp">
+      <Filter>Source Files\Essentials\Inputs</Filter>
+    </ClCompile>
+    <ClCompile Include="Essentials\Mouse\Mouse.cpp">
+      <Filter>Source Files\Essentials\Inputs</Filter>
+    </ClCompile>
+    <ClCompile Include="Camera\Camera.cpp">
+      <Filter>Source Files\Essentials\Visual</Filter>
+    </ClCompile>
+    <ClCompile Include="View\View.cpp">
+      <Filter>Source Files\Essentials\Visual</Filter>
+    </ClCompile>
+    <ClCompile Include="Essentials\Vec3\Vec3.cpp">
+      <Filter>Source Files\Essentials\Additional</Filter>
+    </ClCompile>
+    <ClCompile Include="Essentials\Clock\Clock.cpp">
+      <Filter>Source Files\Essentials\Additional</Filter>
+    </ClCompile>
+    <ClCompile Include="Essentials\ContextSettings\ContextSettings.cpp">
+      <Filter>Source Files\Essentials\Additional</Filter>
+    </ClCompile>
+    <ClCompile Include="Essentials\Vec2\Vec2.cpp">
+      <Filter>Source Files\Essentials\Additional</Filter>
+    </ClCompile>
+    <ClCompile Include="Essentials\Vec4\Vec4.cpp">
+      <Filter>Source Files\Essentials\Additional</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Events\EventHandler.h">
+      <Filter>Header Files\Events</Filter>
+    </ClInclude>
+    <ClInclude Include="Events\Events.h">
+      <Filter>Header Files\Events</Filter>
+    </ClInclude>
+    <ClInclude Include="Windows\Window2D.h">
+      <Filter>Header Files\Windows</Filter>
+    </ClInclude>
+    <ClInclude Include="Windows\Window3D.h">
+      <Filter>Header Files\Windows</Filter>
+    </ClInclude>
+    <ClInclude Include="Header\Graphics.h">
+      <Filter>Header Files\Header</Filter>
+    </ClInclude>
+    <ClInclude Include="Camera\Camera.h">
+      <Filter>Header Files\Essentials\Visual</Filter>
+    </ClInclude>
+    <ClInclude Include="View\View.h">
+      <Filter>Header Files\Essentials\Visual</Filter>
+    </ClInclude>
+    <ClInclude Include="Essentials\Clock\Clock.h">
+      <Filter>Header Files\Essentials\Additional</Filter>
+    </ClInclude>
+    <ClInclude Include="Essentials\ContextSettings\ContextSettings.h">
+      <Filter>Header Files\Essentials\Additional</Filter>
+    </ClInclude>
+    <ClInclude Include="Essentials\Vec2\Vec2.h">
+      <Filter>Header Files\Essentials\Additional</Filter>
+    </ClInclude>
+    <ClInclude Include="Essentials\Vec3\Vec3.h">
+      <Filter>Header Files\Essentials\Additional</Filter>
+    </ClInclude>
+    <ClInclude Include="Essentials\Mouse\Mouse.h">
+      <Filter>Header Files\Essentials\Inputs</Filter>
+    </ClInclude>
+    <ClInclude Include="Essentials\Keyboard\Keyboard.h">
+      <Filter>Header Files\Essentials\Inputs</Filter>
+    </ClInclude>
+    <ClInclude Include="Essentials\Joystick\Joystick.h">
+      <Filter>Header Files\Essentials\Inputs</Filter>
+    </ClInclude>
+    <ClInclude Include="Essentials\VertexArray\VertexArray2D.h">
+      <Filter>Header Files\Essentials</Filter>
+    </ClInclude>
+    <ClInclude Include="Essentials\Vertex\Vertex2D.h">
+      <Filter>Header Files\Essentials</Filter>
+    </ClInclude>
+    <ClInclude Include="Essentials\Vec4\Vec4.h">
+      <Filter>Header Files\Essentials\Additional</Filter>
+    </ClInclude>
+    <ClInclude Include="Header\Graphics2D.h">
+      <Filter>Header Files\Header</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>
