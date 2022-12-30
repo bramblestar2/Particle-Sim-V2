@@ -3,12 +3,14 @@
 Simulation::Simulation()
 {
 	initWindow(Vec2i(200,200));
+
+	//Enable transparent drawings
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+	glEnable(GL_BLEND);
 	
 	particles = nullptr;
 	particleSize = 5;
-	setupParticles(10, 10);
-
-	addParticle(0, 0, ParticleType::SAND);
+	setupParticles(window->getSize().x / particleSize, window->getSize().y / particleSize);
 }
 
 Simulation::~Simulation()
@@ -48,6 +50,27 @@ void Simulation::updateEvents()
 			if (event.keys.key == GLFW_KEY_ESCAPE)
 				window->close();
 		}
+
+		if (event.type == Events::EventType::MOUSE_BUTTON)
+		{
+			if (event.mouseButton.action == GLFW_PRESS &&
+				event.mouseButton.button == GLFW_MOUSE_BUTTON_LEFT)
+			{
+				Vec2d mouse = Mouse::getPosition(window->getWindow());
+
+				addParticle((int)(mouse.x / particleSize), (int)(mouse.y / particleSize), ParticleType::SAND);
+
+				//std::cout << (int)(mouse.x / particleSize) << " - " << (int)(mouse.y / particleSize) << std::endl;
+			}
+			else if (event.mouseButton.action == GLFW_PRESS &&
+					 event.mouseButton.button == GLFW_MOUSE_BUTTON_RIGHT)
+			{
+				Vec2d mouse = Mouse::getPosition(window->getWindow());
+
+				deleteParticle((int)(mouse.x / particleSize), (int)(mouse.y / particleSize));
+				addParticle((int)(mouse.x / particleSize), (int)(mouse.y / particleSize), ParticleType::AIR);
+			}
+		}
 	}
 }
 
@@ -58,7 +81,7 @@ void Simulation::render()
 	for (int x = 0; x < arrSize.x; x++)
 		for (int y = 0; y < arrSize.y; y++)
 		{
-			if (particles[x][y]->getType() != ParticleType::AIR)
+			//if (particles[x][y]->getType() != ParticleType::AIR)
 				particles[x][y]->render();
 		}
 
@@ -140,4 +163,6 @@ void Simulation::deleteParticle(const int _X, const int _Y)
 {
 	if (particles[_X][_Y] != nullptr)
 		delete particles[_X][_Y];
+
+	particles[_X][_Y] = nullptr;
 }
