@@ -1,6 +1,7 @@
 #pragma once
 class Drawable
 {
-	virtual void render() = 0;
+public:
+	virtual void render() {}
 };
 

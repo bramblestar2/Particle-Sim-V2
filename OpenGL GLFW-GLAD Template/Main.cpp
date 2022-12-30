@@ -2,11 +2,13 @@
 
 #include <iostream>
 
-#include "Header/Graphics.h"
+#include "Simulation.h"
 
 int main()
 {
-    
+    Simulation sim;
+
+    sim.run();
 
     return 0;
 }
