@@ -4,6 +4,7 @@
 Air::Air(const Vec2i _Position, const float _Size) : Particle(_Position, _Size)
 {
 	Particle::type = ParticleType::AIR;
+	Particle::movement = MovementType::NONE;
 }
 
 Air::~Air()

@@ -23,6 +23,8 @@ private:
 
 
 	/* Particles */
+	int selectedParticle;
+
 	//2d dimensional array
 	Particle*** particles;
 	Vec2i arrSize;
@@ -30,8 +32,22 @@ private:
 
 	void setupParticles(const int _Width, const int _Height);
 	void clearParticles();
-	void addParticle(const int _X, const int _Y, const ParticleType _Type);
+	bool addParticle(const int _X, const int _Y, const ParticleType _Type);
 	void deleteParticle(const int _X, const int _Y);
 
+	//Tools
+	void brush(const int _Center_X, const int _Center_Y, const int _Brush_Size, ParticleType _Type);
+	void eraser(const int _Center_X, const int _Center_Y, const int _Brush_Size);
+
+	//Moving particles
+
+	//Return false when particle cant move
+	bool down(const int _X, const int _Y);
+	//Return false when particle cant move
+	bool up(const int _X, const int _Y);
+	//Return false when particle cant move
+	bool side(const int _X, const int _Y);
+
+	void swapParticles(const Vec2i _Pos_One, const Vec2i _Pos_Two);
 };
 

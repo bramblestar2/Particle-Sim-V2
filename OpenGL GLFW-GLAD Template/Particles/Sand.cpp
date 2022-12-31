@@ -3,6 +3,7 @@
 Sand::Sand(const Vec2i _Position, const float _Size) : Particle(_Position, _Size)
 {
 	Particle::type = ParticleType::SAND;
+	Particle::movement = MovementType::DOWN;
 	Particle::lifetime = 500;
 	Particle::destructable = true;
 	Particle::movable = true;

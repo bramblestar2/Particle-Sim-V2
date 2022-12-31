@@ -132,6 +132,12 @@
     <ClCompile Include="Particles\Air.cpp">
       <Filter>Source Files\Particles</Filter>
     </ClCompile>
+    <ClCompile Include="Particles\Water.cpp">
+      <Filter>Source Files\Particles</Filter>
+    </ClCompile>
+    <ClCompile Include="Particles\Stone.cpp">
+      <Filter>Source Files\Particles</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Events\EventHandler.h">
@@ -207,6 +213,12 @@
       <Filter>Header Files\Particles</Filter>
     </ClInclude>
     <ClInclude Include="Particles\Air.h">
+      <Filter>Header Files\Particles</Filter>
+    </ClInclude>
+    <ClInclude Include="Particles\Water.h">
+      <Filter>Header Files\Particles</Filter>
+    </ClInclude>
+    <ClInclude Include="Particles\Stone.h">
       <Filter>Header Files\Particles</Filter>
     </ClInclude>
   </ItemGroup>

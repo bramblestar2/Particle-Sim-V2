@@ -13,24 +13,25 @@ Particle::Particle(const Vec2i _Position, const float _Size)
     pos = _Position;
 }
 
-ParticleType Particle::getType() const
+Particle::Data Particle::getData()
 {
-    return type;
+    Data data;
+    data.type = type;
+    data.movement = movement;
+    data.color = color;
+    data.position = pos;
+    data.weight = weight;
+    data.lifetime = lifetime;
+    data.movable = movable;
+    data.destructable = destructable;
+    data.expired = expired();
+
+    return data;
 }
 
-int Particle::getLifetime() const
+void Particle::setPosition(const Vec2i _Position)
 {
-    return lifetime;
-}
-
-bool Particle::isMovable() const
-{
-    return movable;
-}
-
-bool Particle::isDestructable() const
-{
-    return destructable;
+    pos = _Position;
 }
 
 bool Particle::expired() const
