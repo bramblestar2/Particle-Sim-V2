@@ -4,11 +4,11 @@ Water::Water(const Vec2i _Position, const float _Size) : Particle(_Position, _Si
 {
 	Particle::type = ParticleType::WATER;
 	Particle::movement = MovementType::DOWN_SIDES;
-	Particle::lifetime = 500;
+	Particle::lifetime = 2000;
 	Particle::destructable = true;
 	Particle::movable = true;
 	Particle::color = Vec4f(0, 0, 1, 1);
-	Particle::weight = 6;
+	Particle::weight = 4;
 }
 
 Water::~Water()
@@ -17,4 +17,5 @@ Water::~Water()
 
 void Water::update()
 {
+	//lifetime--;
 }

@@ -43,7 +43,12 @@ void Simulation::update()
 		for (int x = 0; x < arrSize.x; x++)
 		{
 			if (particles[x][y]->getData().type != ParticleType::AIR)
+			{
 				particles[x][y]->update();
+
+				if (particles[x][y]->getData().expired)
+					addParticle(x, y, ParticleType::AIR);
+			}
 
 			if (particles[x][y]->getData().movement == MovementType::DOWN)
 			{
@@ -125,11 +130,15 @@ void Simulation::updateEvents()
 					Vec2i pos = particles[(int)mouse.x][(int)mouse.y]->getData().position;
 					int type = (int)particles[(int)mouse.x][(int)mouse.y]->getData().type;
 					Vec4f color = particles[(int)mouse.x][(int)mouse.y]->getData().color;
+					int lifetime = particles[(int)mouse.x][(int)mouse.y]->getData().lifetime;
+					float weight = particles[(int)mouse.x][(int)mouse.y]->getData().weight;
 
 					std::cout << "Position: " << pos.x << " - " << pos.y << std::endl;
 					std::cout << "Type: " << type << std::endl;
 					std::cout << "Color: " << color.x << " - " << color.y << " - " << 
 						color.z << " - " << color.w << std::endl;
+					std::cout << "Lifetime: " << lifetime << std::endl;
+					std::cout << "Weight: " << weight << std::endl;
 
 					std::cout << std::endl;
 				}
@@ -254,7 +263,7 @@ void Simulation::brush(const int _Center_X, const int _Center_Y, const int _Brus
 		for (int k = 0; k < 360; k++)
 		{
 			if (!addParticle((int)(sin(k) * i + _Center_X), (int)(cos(k) * i + _Center_Y), _Type))
-				k += 5;
+				k += 2;
 		}
 	}
 }
@@ -289,50 +298,56 @@ bool Simulation::down(const int _X, const int _Y)
 			return true;
 		}
 
-		//Down left
-		if (_X > 0)
+		switch (rand() % 2)
 		{
-			if (particles[_X - 1][_Y + 1]->getData().type != ParticleType::AIR)
+		case 0:
+			//Down left
+			if (_X > 0)
 			{
-				//Check movable
-				if (particles[_X - 1][_Y + 1]->getData().movable)
+				if (particles[_X - 1][_Y + 1]->getData().type != ParticleType::AIR)
 				{
-					//check weight
-					if (particles[_X][_Y] > particles[_X - 1][_Y + 1])
+					//Check movable
+					if (particles[_X - 1][_Y + 1]->getData().movable)
 					{
-						swapParticles(Vec2i(_X, _Y), Vec2i(_X - 1, _Y + 1));
-						return true;
+						//check weight
+						if (particles[_X][_Y] > particles[_X - 1][_Y + 1])
+						{
+							swapParticles(Vec2i(_X, _Y), Vec2i(_X - 1, _Y + 1));
+							return true;
+						}
 					}
 				}
-			}
-			else if (particles[_X - 1][_Y + 1]->getData().movable)
-			{
-				swapParticles(Vec2i(_X, _Y), Vec2i(_X - 1, _Y + 1));
-				return true;
-			}
-		}
-
-		//Down right
-		if (_X < arrSize.x - 1)
-		{
-			if (particles[_X + 1][_Y + 1]->getData().type != ParticleType::AIR)
-			{
-				//Check movable
-				if (particles[_X + 1][_Y + 1]->getData().movable)
+				else if (particles[_X - 1][_Y + 1]->getData().movable)
 				{
-					//check weight
-					if (particles[_X][_Y] > particles[_X + 1][_Y + 1])
-					{
-						swapParticles(Vec2i(_X, _Y), Vec2i(_X + 1, _Y + 1));
-						return true;
-					}
+					swapParticles(Vec2i(_X, _Y), Vec2i(_X - 1, _Y + 1));
+					return true;
 				}
 			}
-			else if (particles[_X + 1][_Y + 1]->getData().movable)
+			break;
+		case 1:
+			//Down right
+			if (_X < arrSize.x - 1)
 			{
-				swapParticles(Vec2i(_X, _Y), Vec2i(_X + 1, _Y + 1));
-				return true;
+				if (particles[_X + 1][_Y + 1]->getData().type != ParticleType::AIR)
+				{
+					//Check movable
+					if (particles[_X + 1][_Y + 1]->getData().movable)
+					{
+						//check weight
+						if (particles[_X][_Y] > particles[_X + 1][_Y + 1])
+						{
+							swapParticles(Vec2i(_X, _Y), Vec2i(_X + 1, _Y + 1));
+							return true;
+						}
+					}
+				}
+				else if (particles[_X + 1][_Y + 1]->getData().movable)
+				{
+					swapParticles(Vec2i(_X, _Y), Vec2i(_X + 1, _Y + 1));
+					return true;
+				}
 			}
+			break;
 		}
 	}
 
@@ -341,6 +356,82 @@ bool Simulation::down(const int _X, const int _Y)
 
 bool Simulation::up(const int _X, const int _Y)
 {
+	if (_X >= 0 && _X < arrSize.x &&
+		_Y < arrSize.y - 1)
+	{
+		//Up
+		if (particles[_X][_Y - 1]->getData().type != ParticleType::AIR)
+		{
+			//Check movable
+			if (particles[_X][_Y - 1]->getData().movable)
+			{
+				//check weight
+				if (particles[_X][_Y] < particles[_X][_Y - 1])
+				{
+					swapParticles(Vec2i(_X, _Y), Vec2i(_X, _Y - 1));
+					return true;
+				}
+			}
+		}
+		else if (particles[_X][_Y - 1]->getData().movable)
+		{
+			swapParticles(Vec2i(_X, _Y), Vec2i(_X, _Y - 1));
+			return true;
+		}
+
+		switch (rand() % 2)
+		{
+		case 0:
+			//Up left
+			if (_X > 0)
+			{
+				if (particles[_X - 1][_Y - 1]->getData().type != ParticleType::AIR)
+				{
+					//Check movable
+					if (particles[_X - 1][_Y - 1]->getData().movable)
+					{
+						//check weight
+						if (particles[_X][_Y] < particles[_X - 1][_Y - 1])
+						{
+							swapParticles(Vec2i(_X, _Y), Vec2i(_X - 1, _Y - 1));
+							return true;
+						}
+					}
+				}
+				else if (particles[_X - 1][_Y - 1]->getData().movable)
+				{
+					swapParticles(Vec2i(_X, _Y), Vec2i(_X - 1, _Y - 1));
+					return true;
+				}
+			}
+			break;
+		case 1:
+			//Up right
+			if (_X < arrSize.x - 1)
+			{
+				if (particles[_X + 1][_Y - 1]->getData().type != ParticleType::AIR)
+				{
+					//Check movable
+					if (particles[_X + 1][_Y - 1]->getData().movable)
+					{
+						//check weight
+						if (particles[_X][_Y] < particles[_X - 1][_Y - 1])
+						{
+							swapParticles(Vec2i(_X, _Y), Vec2i(_X - 1, _Y - 1));
+							return true;
+						}
+					}
+				}
+				else if (particles[_X + 1][_Y + 1]->getData().movable)
+				{
+					swapParticles(Vec2i(_X, _Y), Vec2i(_X - 1, _Y - 1));
+					return true;
+				}
+			}
+			break;
+		}
+	}
+
 	return false;
 }
 

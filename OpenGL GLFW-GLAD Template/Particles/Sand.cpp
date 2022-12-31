@@ -4,7 +4,7 @@ Sand::Sand(const Vec2i _Position, const float _Size) : Particle(_Position, _Size
 {
 	Particle::type = ParticleType::SAND;
 	Particle::movement = MovementType::DOWN;
-	Particle::lifetime = 500;
+	Particle::lifetime = 5000;
 	Particle::destructable = true;
 	Particle::movable = true;
 	Particle::color = Vec4f(.6, .5, 0, 1);
@@ -17,4 +17,5 @@ Sand::~Sand()
 
 void Sand::update()
 {
+	//lifetime--;
 }
