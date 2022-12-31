@@ -34,6 +34,11 @@ void Particle::setPosition(const Vec2i _Position)
     pos = _Position;
 }
 
+void Particle::addLifetime(const int _Amount)
+{
+    lifetime += _Amount;
+}
+
 bool Particle::expired() const
 {
     return lifetime <= 0;

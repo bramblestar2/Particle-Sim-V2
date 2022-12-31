@@ -1,4 +1,5 @@
 #include "Water.h"
+#include <iostream>
 
 Water::Water(const Vec2i _Position, const float _Size) : Particle(_Position, _Size)
 {
@@ -8,7 +9,7 @@ Water::Water(const Vec2i _Position, const float _Size) : Particle(_Position, _Si
 	Particle::destructable = true;
 	Particle::movable = true;
 	Particle::color = Vec4f(0, 0, 1, 1);
-	Particle::weight = 4;
+	Particle::weight = 2;
 }
 
 Water::~Water()
@@ -18,4 +19,8 @@ Water::~Water()
 void Water::update()
 {
 	//lifetime--;
+}
+
+void Water::specialUpdate(Particle*** _Grid, Vec2i arrSize)
+{
 }

@@ -8,7 +8,7 @@ public:
 	~Air();
 
 	void update() override;
-
+	void specialUpdate(Particle*** _Grid, Vec2i arrSize) override;
 private:
 };
 

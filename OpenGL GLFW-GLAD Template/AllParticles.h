@@ -5,3 +5,4 @@
 #include "Particles/Sand.h"
 #include "Particles/Water.h"
 #include "Particles/Stone.h"
+#include "Particles/Acid.h"

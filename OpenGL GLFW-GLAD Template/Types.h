@@ -1,6 +1,6 @@
 #pragma once
 
-const int MAX_PARTICLES = 4;
+const int MAX_PARTICLES = 5;
 
 
 enum class ParticleType
@@ -9,6 +9,7 @@ enum class ParticleType
 	SAND,
 	WATER,
 	STONE,
+	ACID,
 };
 
 enum class MovementType

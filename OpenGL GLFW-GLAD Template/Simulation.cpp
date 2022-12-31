@@ -44,7 +44,14 @@ void Simulation::update()
 		{
 			if (particles[x][y]->getData().type != ParticleType::AIR)
 			{
+				ParticleType type = particles[x][y]->getData().type;
+
 				particles[x][y]->update();
+
+				if (type == ParticleType::ACID)
+				{
+					particles[x][y]->specialUpdate(particles, arrSize);
+				}
 
 				if (particles[x][y]->getData().expired)
 					addParticle(x, y, ParticleType::AIR);
@@ -154,7 +161,7 @@ void Simulation::render()
 	for (int x = 0; x < arrSize.x; x++)
 		for (int y = 0; y < arrSize.y; y++)
 		{
-			//if (particles[x][y]->getType() != ParticleType::AIR)
+			//if (particles[x][y]->getData().type != ParticleType::AIR)
 				particles[x][y]->render();
 		}
 
@@ -163,7 +170,9 @@ void Simulation::render()
 
 void Simulation::initWindow(const Vec2i _Size)
 {
-	window = new Window2D(_Size.x, _Size.y, "Particle Sandbox", ContextSettings(0, 0, 0, 1, 2));
+	ContextSettings settings(0, 0, 0, 1, 2);
+
+	window = new Window2D(_Size.x, _Size.y, "Particle Sandbox", settings);
 	window->setView(&v1);
 	
 	//Setup view
@@ -235,6 +244,9 @@ bool Simulation::addParticle(const int _X, const int _Y, const ParticleType _Typ
 				break;
 			case ParticleType::WATER:
 				particles[_X][_Y] = new Water(Vec2i(_X, _Y), particleSize);
+				break;
+			case ParticleType::ACID:
+				particles[_X][_Y] = new Acid(Vec2i(_X, _Y), particleSize);
 				break;
 			}
 

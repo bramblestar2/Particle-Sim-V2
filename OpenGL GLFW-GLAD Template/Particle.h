@@ -30,9 +30,11 @@ public:
 	Data getData();
 
 	void setPosition(const Vec2i _Position);
+	void addLifetime(const int _Amount);
 
 	void render() override;
 	virtual void update() = 0;
+	virtual void specialUpdate(Particle*** _Grid, Vec2i arrSize) = 0;
 
 	//Will return if weight is more than _Right
 	bool operator>(const Particle& _Right);

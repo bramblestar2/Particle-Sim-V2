@@ -19,3 +19,7 @@ void Stone::update()
 {
 	lifetime--;
 }
+
+void Stone::specialUpdate(Particle*** _Grid, Vec2i arrSize)
+{
+}
