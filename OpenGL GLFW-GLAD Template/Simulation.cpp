@@ -1,17 +1,21 @@
 #include "Simulation.h"
+#include <time.h>
 
 Simulation::Simulation()
 {
+	srand(time(NULL));
+
 	initWindow(Vec2i(500,300));
 
 	selectedParticle = 1;
+	brushSize = 3;
 
 	//Enable transparent drawings
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 	glEnable(GL_BLEND);
 	
 	particles = nullptr;
-	particleSize = 5;
+	particleSize = 2;
 	setupParticles(window->getSize().x / particleSize, window->getSize().y / particleSize);
 }
 
@@ -45,32 +49,39 @@ void Simulation::update()
 			{
 				down(x, y);
 			}
+			else if (particles[x][y]->getData().movement == MovementType::DOWN_SIDES)
+			{
+				if (!down(x, y))
+				{
+					side(x, y);
+				}
+			}
 		}
 
 	//Add particle brush
 	if (Mouse::isButtonPressed(GLFW_MOUSE_BUTTON_LEFT))
 	{
 		if (Mouse::getPosition(window->getWindow()).x > 0 &&						//Check x
-			Mouse::getPosition(window->getWindow()).x < arrSize.x * particleSize &&	//
+			Mouse::getPosition(window->getWindow()).x < window->getSize().x &&	//
 			Mouse::getPosition(window->getWindow()).y > 0 && 						//Check y
-			Mouse::getPosition(window->getWindow()).y < arrSize.y * particleSize)	//
+			Mouse::getPosition(window->getWindow()).y < window->getSize().y)	//
 		{
 			Vec2d mouse = Mouse::getPosition(window->getWindow());
 
-			brush((int)(mouse.x / particleSize), (int)(mouse.y / particleSize), 5, (ParticleType)selectedParticle);
+			brush((int)(mouse.x / particleSize), (int)(mouse.y / particleSize), brushSize, (ParticleType)selectedParticle);
 		}
 	}
 	//Remove particle brush
 	else if (Mouse::isButtonPressed(GLFW_MOUSE_BUTTON_RIGHT))
 	{
 		if (Mouse::getPosition(window->getWindow()).x > 0 &&						//Check x
-			Mouse::getPosition(window->getWindow()).x < arrSize.x * particleSize &&	//
+			Mouse::getPosition(window->getWindow()).x < window->getSize().x &&	//
 			Mouse::getPosition(window->getWindow()).y > 0 && 						//Check y
-			Mouse::getPosition(window->getWindow()).y < arrSize.y * particleSize)	//
+			Mouse::getPosition(window->getWindow()).y < window->getSize().y)	//
 		{
 			Vec2d mouse = Mouse::getPosition(window->getWindow());
 
-			eraser((int)(mouse.x / particleSize), (int)(mouse.y / particleSize), 5);
+			eraser((int)(mouse.x / particleSize), (int)(mouse.y / particleSize), brushSize);
 		}
 	}
 }
@@ -81,20 +92,48 @@ void Simulation::updateEvents()
 	{
 		if (event.type == Events::EventType::KEY)
 		{
-			if (event.keys.key == GLFW_KEY_ESCAPE)
-				window->close();
+			if (event.keys.action == GLFW_PRESS)
+			{
+				if (event.keys.key == GLFW_KEY_ESCAPE)
+					window->close();
+
+				if (event.keys.key == GLFW_KEY_LEFT && selectedParticle > 1)
+					selectedParticle--;
+				else if (event.keys.key == GLFW_KEY_RIGHT && selectedParticle < MAX_PARTICLES - 1)
+					selectedParticle++;
+			}
 		}
 
 		if (event.type == Events::EventType::MOUSE_SCROLL)
 		{
-			if (event.mouseScroll.yoffset > 0 && selectedParticle < MAX_PARTICLES-1)
-				selectedParticle++;
-			else if (event.mouseScroll.yoffset < 0 && selectedParticle > 1)
-				selectedParticle--;
+			if (event.mouseScroll.yoffset > 0 && brushSize < 50)
+				brushSize++;
+			else if (event.mouseScroll.yoffset < 0 && brushSize > 1)
+				brushSize--;
 		}
 
 		if (event.type == Events::EventType::MOUSE_BUTTON)
 		{
+			if (event.mouseButton.action == GLFW_PRESS)
+			{
+				if (event.mouseButton.button == GLFW_MOUSE_BUTTON_MIDDLE)
+				{
+					Vec2d mouse = Mouse::getPosition(window->getWindow());
+					mouse.x /= particleSize;
+					mouse.y /= particleSize;
+
+					Vec2i pos = particles[(int)mouse.x][(int)mouse.y]->getData().position;
+					int type = (int)particles[(int)mouse.x][(int)mouse.y]->getData().type;
+					Vec4f color = particles[(int)mouse.x][(int)mouse.y]->getData().color;
+
+					std::cout << "Position: " << pos.x << " - " << pos.y << std::endl;
+					std::cout << "Type: " << type << std::endl;
+					std::cout << "Color: " << color.x << " - " << color.y << " - " << 
+						color.z << " - " << color.w << std::endl;
+
+					std::cout << std::endl;
+				}
+			}
 		}
 	}
 }
@@ -289,7 +328,7 @@ bool Simulation::down(const int _X, const int _Y)
 					}
 				}
 			}
-			else if(particles[_X + 1][_Y + 1]->getData().movable)
+			else if (particles[_X + 1][_Y + 1]->getData().movable)
 			{
 				swapParticles(Vec2i(_X, _Y), Vec2i(_X + 1, _Y + 1));
 				return true;
@@ -307,15 +346,57 @@ bool Simulation::up(const int _X, const int _Y)
 
 bool Simulation::side(const int _X, const int _Y)
 {
+	if (_X > 0 && _X < arrSize.x-1)
+	{
+		switch (rand() % 2)
+		{
+		case 0:
+			//Check left
+			if (particles[_X - 1][_Y]->getData().type != ParticleType::AIR)
+			{
+				//Check if movable
+				if (particles[_X - 1][_Y]->getData().movable)
+				{
+					swapParticles(Vec2i(_X, _Y), Vec2i(_X - 1, _Y));
+					return true;
+				}
+			}
+			else if (particles[_X - 1][_Y]->getData().movable)
+			{
+				swapParticles(Vec2i(_X, _Y), Vec2i(_X - 1, _Y));
+				return true;
+			}
+			break;
+		case 1:
+			//Check right
+			if (particles[_X + 1][_Y]->getData().type != ParticleType::AIR)
+			{
+				//Check if movable
+				if (particles[_X + 1][_Y]->getData().movable)
+				{
+					swapParticles(Vec2i(_X, _Y), Vec2i(_X + 1, _Y));
+					return true;
+				}
+			}
+			else if (particles[_X + 1][_Y]->getData().movable)
+			{
+				swapParticles(Vec2i(_X, _Y), Vec2i(_X + 1, _Y));
+				return true;
+			}
+			break;
+		}
+	}
+
 	return false;
 }
 
 void Simulation::swapParticles(const Vec2i _Pos_One, const Vec2i _Pos_Two)
 {
 	Particle* temp = particles[_Pos_One.x][_Pos_One.y];
+
 	particles[_Pos_One.x][_Pos_One.y] = particles[_Pos_Two.x][_Pos_Two.y];
 	particles[_Pos_Two.x][_Pos_Two.y] = temp;
 
-	particles[_Pos_One.x][_Pos_One.y]->setPosition(_Pos_Two);
-	particles[_Pos_Two.x][_Pos_Two.y]->setPosition(_Pos_One);
+	particles[_Pos_One.x][_Pos_One.y]->setPosition(_Pos_One);
+	particles[_Pos_Two.x][_Pos_Two.y]->setPosition(_Pos_Two);
 }

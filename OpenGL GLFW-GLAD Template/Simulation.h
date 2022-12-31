@@ -24,6 +24,7 @@ private:
 
 	/* Particles */
 	int selectedParticle;
+	int brushSize;
 
 	//2d dimensional array
 	Particle*** particles;

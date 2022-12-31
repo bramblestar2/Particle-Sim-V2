@@ -3,7 +3,7 @@
 Water::Water(const Vec2i _Position, const float _Size) : Particle(_Position, _Size)
 {
 	Particle::type = ParticleType::WATER;
-	Particle::movement = MovementType::DOWN;
+	Particle::movement = MovementType::DOWN_SIDES;
 	Particle::lifetime = 500;
 	Particle::destructable = true;
 	Particle::movable = true;
