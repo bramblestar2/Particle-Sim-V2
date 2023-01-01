@@ -57,5 +57,11 @@ protected:
 	int lifetime;
 	bool movable;
 	bool destructable;
+
+
+	float lerp(float a, float b, float t)
+	{
+		return a + t * (b - a);
+	}
 };
 

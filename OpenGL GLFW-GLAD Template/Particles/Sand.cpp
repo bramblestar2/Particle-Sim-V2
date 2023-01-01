@@ -18,8 +18,8 @@ Sand::~Sand()
 
 void Sand::update()
 {
-	//color.x = lerp(color.x, (rand() % 50 / 50.f) + 0.6f, .1f);
-	//color.y = lerp(color.y, (rand() % 70 / 70.f) + 0.5f, .1f);
+	color.x = lerp(color.x, (rand() % 50 / 50.f) + 0.6f, .1f);
+	color.y = lerp(color.y, (rand() % 70 / 70.f) + 0.5f, .1f);
 
 	//lifetime--;
 }

@@ -10,9 +10,5 @@ public:
 	void update() override;
 	void specialUpdate(Particle*** _Grid, Vec2i arrSize) override;
 private:
-	//float lerp(float a, float b, float t)
-	//{
-	//	return a + t * (b - a);
-	//}
 };
 

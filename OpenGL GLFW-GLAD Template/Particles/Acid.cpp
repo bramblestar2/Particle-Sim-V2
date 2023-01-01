@@ -14,6 +14,8 @@ Acid::Acid(const Vec2i _Position, const float _Size) : Particle(_Position, _Size
 
 void Acid::update()
 {
+	color.y = lerp(color.y, (rand() % 76 / 255) + .7, .1f);
+	color.z = lerp(color.z, (rand() % 51 / 255), .1f);
 }
 
 void Acid::specialUpdate(Particle*** _Grid, Vec2i arrSize)

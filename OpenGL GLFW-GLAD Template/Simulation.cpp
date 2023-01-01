@@ -297,7 +297,7 @@ bool Simulation::down(const int _X, const int _Y)
 			if (particles[_X][_Y + 1]->getData().movable)
 			{
 				//check weight
-				if (particles[_X][_Y] > particles[_X][_Y + 1])
+				if (particles[_X][_Y]->getData().weight > particles[_X][_Y + 1]->getData().weight)
 				{
 					swapParticles(Vec2i(_X, _Y), Vec2i(_X, _Y + 1));
 					return true;
@@ -322,7 +322,7 @@ bool Simulation::down(const int _X, const int _Y)
 					if (particles[_X - 1][_Y + 1]->getData().movable)
 					{
 						//check weight
-						if (particles[_X][_Y] > particles[_X - 1][_Y + 1])
+						if (particles[_X][_Y]->getData().weight > particles[_X - 1][_Y + 1]->getData().weight)
 						{
 							swapParticles(Vec2i(_X, _Y), Vec2i(_X - 1, _Y + 1));
 							return true;
@@ -346,7 +346,7 @@ bool Simulation::down(const int _X, const int _Y)
 					if (particles[_X + 1][_Y + 1]->getData().movable)
 					{
 						//check weight
-						if (particles[_X][_Y] > particles[_X + 1][_Y + 1])
+						if (particles[_X][_Y]->getData().weight > particles[_X + 1][_Y + 1]->getData().weight)
 						{
 							swapParticles(Vec2i(_X, _Y), Vec2i(_X + 1, _Y + 1));
 							return true;
