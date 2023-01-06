@@ -28,13 +28,14 @@ private:
 
 	//2d dimensional array
 	Particle*** particles;
+	Particle*** back_particles; //Not visible
 	Vec2i arrSize;
 	float particleSize;
 
-	void setupParticles(const int _Width, const int _Height);
-	void clearParticles();
-	bool addParticle(const int _X, const int _Y, const ParticleType _Type);
-	void deleteParticle(const int _X, const int _Y);
+	void setupParticles(Particle*** _Grid, const int _Width, const int _Height);
+	void clearParticles(Particle*** _Grid);
+	bool addParticle(Particle*** _Grid, const int _X, const int _Y, const ParticleType _Type);
+	void deleteParticle(Particle*** _Grid, const int _X, const int _Y);
 
 	//Tools
 	void brush(const int _Center_X, const int _Center_Y, const int _Brush_Size, ParticleType _Type);
@@ -50,5 +51,7 @@ private:
 	bool side(const int _X, const int _Y);
 
 	void swapParticles(const Vec2i _Pos_One, const Vec2i _Pos_Two);
+	void moveParticle(const Vec2i _Pos_One, const Vec2i _Pos_Two); 
+	void swapGrids(); //Swaps the front and back grid, clearing the front grid first
 };
 

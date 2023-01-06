@@ -11,6 +11,8 @@ Particle::Particle(const Vec2i _Position, const float _Size)
     movable = true;
     destructable = true;
     pos = _Position;
+
+    movingLeft = rand() % 2 == 0 ? true : false;
 }
 
 Particle::Data Particle::getData()
@@ -25,6 +27,8 @@ Particle::Data Particle::getData()
     data.movable = movable;
     data.destructable = destructable;
     data.expired = expired();
+
+    data.movingLeft = movingLeft;
 
     return data;
 }
@@ -42,6 +46,11 @@ void Particle::addLifetime(const int _Amount)
 bool Particle::expired() const
 {
     return lifetime <= 0;
+}
+
+void Particle::swapDirections()
+{
+    movingLeft = movingLeft ? false : true;
 }
 
 void Particle::render()

@@ -22,6 +22,9 @@ class Particle : public Drawable
 		bool movable, destructable;
 
 		bool expired;
+
+		//If particle can move to the sides
+		bool movingLeft;
 	};
 
 public:
@@ -31,6 +34,9 @@ public:
 
 	void setPosition(const Vec2i _Position);
 	void addLifetime(const int _Amount);
+	
+	//If particle can move to the sides
+	void swapDirections();
 
 	void render() override;
 	virtual void update() = 0;
@@ -57,6 +63,8 @@ protected:
 	int lifetime;
 	bool movable;
 	bool destructable;
+
+	bool movingLeft;
 
 
 	float lerp(float a, float b, float t)

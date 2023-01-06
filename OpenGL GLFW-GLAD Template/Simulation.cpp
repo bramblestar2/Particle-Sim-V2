@@ -15,8 +15,10 @@ Simulation::Simulation()
 	glEnable(GL_BLEND);
 	
 	particles = nullptr;
+	back_particles = nullptr;
 	particleSize = 2;
-	setupParticles(window->getSize().x / particleSize, window->getSize().y / particleSize);
+	setupParticles(particles, window->getSize().x / particleSize, window->getSize().y / particleSize);
+	setupParticles(back_particles, window->getSize().x / particleSize, window->getSize().y / particleSize);
 }
 
 Simulation::~Simulation()
@@ -24,7 +26,7 @@ Simulation::~Simulation()
 	//Delete window pointer
 	delete window;
 
-	clearParticles();
+	clearParticles(particles);
 }
 
 void Simulation::run()
@@ -54,7 +56,7 @@ void Simulation::update()
 				}
 
 				if (particles[x][y]->getData().expired)
-					addParticle(x, y, ParticleType::AIR);
+					addParticle(particles, x, y, ParticleType::AIR);
 			}
 
 			if (particles[x][y]->getData().movement == MovementType::DOWN)
@@ -96,6 +98,8 @@ void Simulation::update()
 			eraser((int)(mouse.x / particleSize), (int)(mouse.y / particleSize), brushSize);
 		}
 	}
+
+	swapGrids();
 }
 
 void Simulation::updateEvents()
@@ -179,9 +183,9 @@ void Simulation::initWindow(const Vec2i _Size)
 	v1.setSize(_Size.x, _Size.y);
 }
 
-void Simulation::setupParticles(const int _Width, const int _Height)
+void Simulation::setupParticles(Particle*** _Grid, const int _Width, const int _Height)
 {
-	clearParticles();
+	clearParticles(particles);
 
 	arrSize.x = _Width;
 	arrSize.y = _Height;
@@ -198,7 +202,7 @@ void Simulation::setupParticles(const int _Width, const int _Height)
 			particles[x][y] = new Air(Vec2i(x, y), particleSize);
 }
 
-void Simulation::clearParticles()
+void Simulation::clearParticles(Particle*** _Grid)
 {
 	//Check if particles is not a nullptr
 	if (particles != nullptr)
@@ -209,7 +213,7 @@ void Simulation::clearParticles()
 			{
 				for (int y = 0; y < arrSize.y; y++)
 				{
-					deleteParticle(x, y);
+					deleteParticle(particles, x, y);
 				}
 
 				delete[] particles[x];
@@ -222,14 +226,14 @@ void Simulation::clearParticles()
 
 //True if a particle has been added
 //False if not
-bool Simulation::addParticle(const int _X, const int _Y, const ParticleType _Type)
+bool Simulation::addParticle(Particle*** _Grid, const int _X, const int _Y, const ParticleType _Type)
 {
 	if (_X >= 0 && _X < arrSize.x &&
 		_Y >= 0 && _Y < arrSize.y)
 	{
 		if (particles[_X][_Y]->getData().type != _Type)
 		{
-			deleteParticle(_X, _Y);
+			deleteParticle(particles, _X, _Y);
 
 			switch (_Type)
 			{
@@ -256,7 +260,7 @@ bool Simulation::addParticle(const int _X, const int _Y, const ParticleType _Typ
 	return false;
 }
 
-void Simulation::deleteParticle(const int _X, const int _Y)
+void Simulation::deleteParticle(Particle*** _Grid, const int _X, const int _Y)
 {
 	if (_X >= 0 && _X < arrSize.x &&
 		_Y >= 0 && _Y < arrSize.y)
@@ -274,7 +278,7 @@ void Simulation::brush(const int _Center_X, const int _Center_Y, const int _Brus
 	{
 		for (int k = 0; k < 360; k++)
 		{
-			if (!addParticle((int)(sin(k) * i + _Center_X), (int)(cos(k) * i + _Center_Y), _Type))
+			if (!addParticle(particles, (int)(sin(k) * i + _Center_X), (int)(cos(k) * i + _Center_Y), _Type))
 				k += 2;
 		}
 	}
@@ -299,14 +303,14 @@ bool Simulation::down(const int _X, const int _Y)
 				//check weight
 				if (particles[_X][_Y]->getData().weight > particles[_X][_Y + 1]->getData().weight)
 				{
-					swapParticles(Vec2i(_X, _Y), Vec2i(_X, _Y + 1));
+					moveParticle(Vec2i(_X, _Y), Vec2i(_X, _Y + 1));
 					return true;
 				}
 			}
 		}
 		else if (particles[_X][_Y + 1]->getData().movable)
 		{
-			swapParticles(Vec2i(_X, _Y), Vec2i(_X, _Y + 1));
+			moveParticle(Vec2i(_X, _Y), Vec2i(_X, _Y + 1));
 			return true;
 		}
 
@@ -324,14 +328,14 @@ bool Simulation::down(const int _X, const int _Y)
 						//check weight
 						if (particles[_X][_Y]->getData().weight > particles[_X - 1][_Y + 1]->getData().weight)
 						{
-							swapParticles(Vec2i(_X, _Y), Vec2i(_X - 1, _Y + 1));
+							moveParticle(Vec2i(_X, _Y), Vec2i(_X - 1, _Y + 1));
 							return true;
 						}
 					}
 				}
 				else if (particles[_X - 1][_Y + 1]->getData().movable)
 				{
-					swapParticles(Vec2i(_X, _Y), Vec2i(_X - 1, _Y + 1));
+					moveParticle(Vec2i(_X, _Y), Vec2i(_X - 1, _Y + 1));
 					return true;
 				}
 			}
@@ -348,14 +352,14 @@ bool Simulation::down(const int _X, const int _Y)
 						//check weight
 						if (particles[_X][_Y]->getData().weight > particles[_X + 1][_Y + 1]->getData().weight)
 						{
-							swapParticles(Vec2i(_X, _Y), Vec2i(_X + 1, _Y + 1));
+							moveParticle(Vec2i(_X, _Y), Vec2i(_X + 1, _Y + 1));
 							return true;
 						}
 					}
 				}
 				else if (particles[_X + 1][_Y + 1]->getData().movable)
 				{
-					swapParticles(Vec2i(_X, _Y), Vec2i(_X + 1, _Y + 1));
+					moveParticle(Vec2i(_X, _Y), Vec2i(_X + 1, _Y + 1));
 					return true;
 				}
 			}
@@ -380,14 +384,14 @@ bool Simulation::up(const int _X, const int _Y)
 				//check weight
 				if (particles[_X][_Y] < particles[_X][_Y - 1])
 				{
-					swapParticles(Vec2i(_X, _Y), Vec2i(_X, _Y - 1));
+					moveParticle(Vec2i(_X, _Y), Vec2i(_X, _Y - 1));
 					return true;
 				}
 			}
 		}
 		else if (particles[_X][_Y - 1]->getData().movable)
 		{
-			swapParticles(Vec2i(_X, _Y), Vec2i(_X, _Y - 1));
+			moveParticle(Vec2i(_X, _Y), Vec2i(_X, _Y - 1));
 			return true;
 		}
 
@@ -405,14 +409,14 @@ bool Simulation::up(const int _X, const int _Y)
 						//check weight
 						if (particles[_X][_Y] < particles[_X - 1][_Y - 1])
 						{
-							swapParticles(Vec2i(_X, _Y), Vec2i(_X - 1, _Y - 1));
+							moveParticle(Vec2i(_X, _Y), Vec2i(_X - 1, _Y - 1));
 							return true;
 						}
 					}
 				}
 				else if (particles[_X - 1][_Y - 1]->getData().movable)
 				{
-					swapParticles(Vec2i(_X, _Y), Vec2i(_X - 1, _Y - 1));
+					moveParticle(Vec2i(_X, _Y), Vec2i(_X - 1, _Y - 1));
 					return true;
 				}
 			}
@@ -429,14 +433,14 @@ bool Simulation::up(const int _X, const int _Y)
 						//check weight
 						if (particles[_X][_Y] < particles[_X - 1][_Y - 1])
 						{
-							swapParticles(Vec2i(_X, _Y), Vec2i(_X - 1, _Y - 1));
+							moveParticle(Vec2i(_X, _Y), Vec2i(_X - 1, _Y - 1));
 							return true;
 						}
 					}
 				}
 				else if (particles[_X + 1][_Y + 1]->getData().movable)
 				{
-					swapParticles(Vec2i(_X, _Y), Vec2i(_X - 1, _Y - 1));
+					moveParticle(Vec2i(_X, _Y), Vec2i(_X - 1, _Y - 1));
 					return true;
 				}
 			}
@@ -451,43 +455,62 @@ bool Simulation::side(const int _X, const int _Y)
 {
 	if (_X > 0 && _X < arrSize.x-1)
 	{
-		switch (rand() % 2)
-		{
-		case 0:
-			//Check left
-			if (particles[_X - 1][_Y]->getData().type != ParticleType::AIR)
+		//switch (rand() % 2)
+		//{
+		//case 0:
+			//Check if the particle is moving left
+			if (particles[_X][_Y]->getData().movingLeft)
 			{
-				//Check if movable
-				if (particles[_X - 1][_Y]->getData().movable)
+				//Check left
+				if (particles[_X - 1][_Y]->getData().type != ParticleType::AIR)
 				{
-					swapParticles(Vec2i(_X, _Y), Vec2i(_X - 1, _Y));
+					//Check if movable
+					if (particles[_X - 1][_Y]->getData().movable)
+					{
+						moveParticle(Vec2i(_X, _Y), Vec2i(_X - 1, _Y));
+						return true;
+					}
+				}
+				else if (particles[_X - 1][_Y]->getData().movable)
+				{
+					moveParticle(Vec2i(_X, _Y), Vec2i(_X - 1, _Y));
+					return true;
+				}
+				else
+				{
+					particles[_X][_Y]->swapDirections();
 					return true;
 				}
 			}
-			else if (particles[_X - 1][_Y]->getData().movable)
+			//break;
+		//case 1:
+			//Check if the particle is moving right
+			else if (!particles[_X][_Y]->getData().movingLeft)
 			{
-				swapParticles(Vec2i(_X, _Y), Vec2i(_X - 1, _Y));
-				return true;
-			}
-			break;
-		case 1:
-			//Check right
-			if (particles[_X + 1][_Y]->getData().type != ParticleType::AIR)
-			{
-				//Check if movable
-				if (particles[_X + 1][_Y]->getData().movable)
+				//Check right
+				if (particles[_X + 1][_Y]->getData().type != ParticleType::AIR)
 				{
-					swapParticles(Vec2i(_X, _Y), Vec2i(_X + 1, _Y));
+					//Check if movable
+					if (particles[_X + 1][_Y]->getData().movable)
+					{
+						moveParticle(Vec2i(_X, _Y), Vec2i(_X + 1, _Y));
+						return true;
+					}
+				}
+				else if (particles[_X + 1][_Y]->getData().movable)
+				{
+					moveParticle(Vec2i(_X, _Y), Vec2i(_X + 1, _Y));
+					
+					return true;
+				}
+				else
+				{
+					particles[_X][_Y]->swapDirections();
 					return true;
 				}
 			}
-			else if (particles[_X + 1][_Y]->getData().movable)
-			{
-				swapParticles(Vec2i(_X, _Y), Vec2i(_X + 1, _Y));
-				return true;
-			}
-			break;
-		}
+			//break;
+		//}
 	}
 
 	return false;
@@ -502,4 +525,24 @@ void Simulation::swapParticles(const Vec2i _Pos_One, const Vec2i _Pos_Two)
 
 	particles[_Pos_One.x][_Pos_One.y]->setPosition(_Pos_One);
 	particles[_Pos_Two.x][_Pos_Two.y]->setPosition(_Pos_Two);
+}
+
+void Simulation::moveParticle(const Vec2i _Pos_One, const Vec2i _Pos_Two)
+{
+	deleteParticle(back_particles, _Pos_Two.x, _Pos_Two.y);
+
+	back_particles[_Pos_Two.x][_Pos_Two.y] = particles[_Pos_One.x][_Pos_One.y];
+	back_particles[_Pos_Two.x][_Pos_Two.y]->setPosition(_Pos_Two);
+}
+
+void Simulation::swapGrids()
+{
+	clearParticles(particles);
+
+	for (int x = 0; x < arrSize.x; x++)
+		for (int y = 0; y < arrSize.y; y++)
+		{
+			particles[x][y] = back_particles[x][y];
+			back_particles[x][y] = nullptr;
+		}
 }
